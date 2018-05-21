@@ -1,0 +1,38 @@
+.container{
+  max-width:400px;
+  width:100%;
+  padding:20px;
+  border-radius: 10px;
+}
+
+.form{
+  font-size: 16px;
+  line-height: 1.3em;
+}
+
+.formRow + .formRow{
+  margin-top:15px;
+  display: flex;
+  justify-content: center;
+}
+
+.formButton{
+  padding:15px;
+  border-radius:5px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: block;
+  &:hover{
+    background: rgba(red, .2);
+    cursor:pointer;
+  }
+}
+
+.input{
+  width:100%;
+  padding: 5px;
+  line-height: 30px;
+  border: 1px solid rgba(#000, .3);
+  text-align: center;
+}
