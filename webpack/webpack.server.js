@@ -24,7 +24,9 @@ module.exports = {
             functions:path.resolve('src','functions'),
             constants:path.resolve('src', 'constants'),
             middleware: path.resolve('src', 'middleware'),
-            templates: path.resolve('src', 'templates')
+            templates: path.resolve('src', 'templates'),
+            mongo: path.resolve('src', 'mongo'),
+            connectors: path.resolve('src', 'connectors')
         }
     },
     module:{

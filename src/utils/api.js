@@ -1,4 +1,5 @@
 import 'isomorphic-fetch';
+
 class Api{
     constructor(){
         this.path = '/api/';

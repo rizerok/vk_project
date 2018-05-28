@@ -1,41 +1,38 @@
 import Router from 'koa-router';
+
+import SiteUser from 'mongo/site-user';
+import VkUser from 'mongo/vk-user';
+import signUp from 'middleware/sign/signup';
+
 const login = new Router();
 
-import {createVkApiUrl} from 'functions/vk-url-creator';
-import {
-    apiMethodUrl,
-    client_id,
-    display,
-    redirect_uri,
-    scope,
-    response_type,
-    v
-} from 'constants/vk';
-
 login.post('/', async ctx => {
+    let data = {};
+    const {
+        access_token,
+        user_id: vk_id
+    } = ctx.request.body;
+
+    const siteUser = await SiteUser.findOne({vk_id});
+    if(siteUser){//login
+        const vkUser = await VkUser.findOne({id: vk_id});
+        data = {
+            siteUser,
+            vkUser
+        };
+    }else{//create
+        data = await signUp.run(access_token, vk_id);
+    }
+
+    if(data.status !== 'error'){
+        console.log('token token token', data.siteUser.access_token);
+        ctx.cookies.set('access_token', data.siteUser.access_token);
+    }
+
     ctx.set({
         'Content-Type': 'application/json'
     });
-    console.log(ctx.request.body);
-
-    const {
-        access_token,
-        user_id
-    } = ctx.request.body;
-
-    //mongose
-
-    fetch(createVkApiUrl(apiMethodUrl + 'users.get', {
-        access_token,
-        user_ids: user_id,
-        v
-    })).then((res) => res.json()).then(json => {
-        console.log(json);
-    });
-
-    ctx.body = {
-        answer: 'ura!!!'
-    };
+    ctx.body = data;
 });
 
 export default login;

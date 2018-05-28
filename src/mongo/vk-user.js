@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const vkUser = new Schema({
+const vkUserSchema = new Schema({
     id:{
         type: Number,
-        required: true
+        required: true,
+        unique: 'User with id "VALUE" already exist'
     },
     first_name: {
         type: String
@@ -29,4 +30,4 @@ const vkUser = new Schema({
     }
 });
 
-mongoose.model('vkUser', vkUser);
+export default mongoose.model('VkUser', vkUserSchema);
