@@ -5,7 +5,7 @@ const ListToUsers = () => {
     return (
         <Route render={({ staticContext }) => {
             if (staticContext) {
-                staticContext.status = 301;
+                staticContext.status = 302;
             }
             return <Redirect from="/list" to="/users" />;
         }}/>

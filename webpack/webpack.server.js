@@ -1,6 +1,7 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const alias = require('./alias');
 
 module.exports = {
     target:'node',
@@ -11,23 +12,8 @@ module.exports = {
         filename:path.join('server','[name].js'),
         publicPath:'/'
     },
-    resolve:{
-        alias:{
-            root:path.resolve(),
-            public:path.resolve('public'),
-            src:path.resolve('src'),
-            components:path.resolve('src','components'),
-            utils:path.resolve('src','utils'),
-            styles:path.resolve('src','assets','styles'),
-            fonts:path.resolve('src','assets','fonts'),
-            img:path.resolve('src','assets','images'),
-            functions:path.resolve('src','functions'),
-            constants:path.resolve('src', 'constants'),
-            middleware: path.resolve('src', 'middleware'),
-            templates: path.resolve('src', 'templates'),
-            mongo: path.resolve('src', 'mongo'),
-            connectors: path.resolve('src', 'connectors')
-        }
+    resolve: {
+        alias,
     },
     module:{
         rules:[
@@ -39,6 +25,10 @@ module.exports = {
                     options:{
                         presets:[
                             'react'
+                        ],
+                        plugins: [
+                            'transform-class-properties',
+                            'transform-object-rest-spread'
                         ],
                         cacheDirectory:true
                     }
@@ -57,7 +47,7 @@ module.exports = {
                         modules: true,
                         importModules:2,
                         //https://github.com/webpack/loader-utils#interpolatename
-                        localIdentName: '[path][name]-[local]-[hash:base64:3]'
+                        localIdentName: '[path][name]-[local]'
                     }
                 },
                 {
@@ -73,6 +63,40 @@ module.exports = {
                     }
                 }]
             },
+            {
+                test: /\.(gif|png|jpe?g|ico)$/i,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '/public/images/[name].[ext]',
+                        publicPath: function (url) {
+                            return url.replace(/\/public/, '');
+                        }
+                    }
+                },
+                exclude: /node_modules/
+            },
+            {
+                test: /\.svg$/,
+                exclude: /node_modules/,
+                loader: 'svg-react-loader',
+                query: {
+
+                    xmlnsTest: /^xmlns.*$/
+                }
+            },
+            {
+                test: /fonts\/.*\.(eot|ttf|woff|woff2)$/i,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: path.join('public', 'fonts', '[name].[ext]'),
+                        publicPath: function (url) {
+                            return url.replace(/public/, '');
+                        }
+                    }
+                }
+            }
         ]
     },
     externals:[nodeExternals()],

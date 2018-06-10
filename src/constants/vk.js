@@ -5,4 +5,4 @@ export const display = 'page';
 export const redirect_uri = 'https://oauth.vk.com/blank.html';
 export const scope = ['groups'];
 export const response_type = 'token';
-export const v = 5.74;
+export const v = 5.78;

@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+require('dotenv').config();
 
 let extractSASS = new ExtractTextPlugin({
     filename:path.join('public','[name].css')
@@ -12,7 +13,8 @@ module.exports = {
         filename:path.join('public','[name].js'),
         publicPath:'/',
     },
-    devtool:'cheap-eval-source-map',
+    //devtool:'cheap-eval-source-map',
+    devtool:'eval-source-map',
     module:{
         rules:[
             {
@@ -27,7 +29,7 @@ module.exports = {
                             modules: true,
                             importModules:2,
                             //https://github.com/webpack/loader-utils#interpolatename
-                            localIdentName: '[path][name]-[local]-[hash:base64:3]'
+                            localIdentName: '[path][name]-[local]'
                         }
                     },
                     {

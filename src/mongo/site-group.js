@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import VkGroup from 'mongo/vk-group';
 const Schema = mongoose.Schema;
 
 const siteGroupSchema = new Schema({
@@ -10,6 +9,14 @@ const siteGroupSchema = new Schema({
     },
     owner: {
         type: Number
+    }
+},{
+    toObject: {
+        transform(doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+            return ret;
+        }
     }
 });
 

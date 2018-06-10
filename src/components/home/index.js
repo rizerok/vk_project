@@ -1,3 +1,4 @@
+import {urlLogin} from 'constants/urls';
 import React from 'react';
 import c from 'classnames';
 import { NavLink } from 'react-router-dom';
@@ -20,7 +21,7 @@ class Home extends React.Component{
                         <span>Инструмент для лучшего понимания своей целевой аудитории.</span>
                     </div>
                     <div className={style.goLogin}>
-                        <NavLink className={style.goLoginButton} to="/login">Вход</NavLink>
+                        <NavLink className={style.goLoginButton} to={urlLogin}>Вход</NavLink>
                     </div>
                 </div>
             </div>

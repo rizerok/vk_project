@@ -1,4 +1,8 @@
+import {urlUser} from 'constants/urls';
 import React from 'react';
+import {withRouter, Link} from 'react-router-dom';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 import {createVkApiUrl} from 'functions/vk-url-creator';
 import {
@@ -10,7 +14,8 @@ import {
     response_type,
     v
 } from 'constants/vk';
-import api from 'utils/api';
+
+import {loginUser} from 'modules/user';
 
 import style from './style.scss';
 
@@ -28,18 +33,10 @@ class LoginForm extends React.Component{
         };
     }
     login(){
-        api.login({
-            method:'POST',
-            credentials: 'same-origin',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body:JSON.stringify({
-                access_token: this.state.accessToken,
-                user_id: this.state.userId
-            })
-        });
+        this.props.loginUser(this.state.accessToken, this.state.userId)
+            .then(res => {
+                this.props.history.replace(urlUser);
+            });
     }
     accessTokenChange(e){
         localStorage.setItem('accessToken', e.target.value);
@@ -92,10 +89,14 @@ class LoginForm extends React.Component{
                         onClick={this.login}
                     >SIGN IN</button>
                 </div>
+                <div className={style.formRow}>
+                    <Link to={urlUser}>Go to User Zone</Link>
+                </div>
             </div>
         </div>;
     }
 }
 
+const mapDispatchToProps = {loginUser};
 
-export default LoginForm;
+export default withRouter(connect(null, mapDispatchToProps)(LoginForm));

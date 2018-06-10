@@ -26,7 +26,7 @@ module.exports = {
                             importLoaders: 2,
                             minimize:true,
                             modules: true,
-                            localIdentName: '[path][name]-[local]-[hash:base64:3]'
+                            localIdentName: '[hash:base64:8]'
                         }
                     },
                     {

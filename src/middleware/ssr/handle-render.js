@@ -13,11 +13,14 @@ import {renderRoutes, matchRoutes} from 'react-router-config';
 import reducer from 'src/reducers';
 import routes from 'src/routes';
 import renderBaseTemplate from 'templates/base';
+import handleStaticRouterContext from 'middleware/ssr/handle-static-router-context';
 
 const manifest = JSON.parse(fs.readFileSync(path.resolve('manifest.json'), 'utf8'));
 
-const handleRender = (preloadedState = {}) => async function (ctx) {
+const handleRender = (preloadedState) => async function (ctx) {
     console.log(ctx.url);
+    preloadedState = preloadedState || ctx.state.preloadedState || {};
+
     const store = createStore(reducer, preloadedState, applyMiddleware(thunk));
 
     const branch = matchRoutes(routes, ctx.url);
@@ -29,11 +32,11 @@ const handleRender = (preloadedState = {}) => async function (ctx) {
 
     await Promise.all(promises);
 
-    let context = {};
+    let staticRouterContext = {};
 
     let html = renderToString(
         <Provider store={store}>
-            <StaticRouter location={ctx.url} context={context}>
+            <StaticRouter location={ctx.url} context={staticRouterContext}>
                 {renderRoutes(routes)}
             </StaticRouter>
         </Provider>
@@ -41,14 +44,7 @@ const handleRender = (preloadedState = {}) => async function (ctx) {
 
     const finalState = store.getState();
 
-    if (context.status === 404){
-        ctx.status = 404;
-    }
-
-    if (context.status === 301) {
-        ctx.status = 301;
-        ctx.redirect(context.url);
-    }
+    await handleStaticRouterContext(staticRouterContext, ctx);
 
     ctx.body = renderBaseTemplate(html, finalState, manifest);
 };

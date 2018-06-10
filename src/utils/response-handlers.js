@@ -1,8 +1,12 @@
 import {
     fetchResponseError,
-    vkResponseError,
-    mongoResultError
+    vkResponseError
 } from 'utils/errors';
+import {
+    invalidOrExpiredTokenResponse,
+    loginErrorResponse
+} from 'constants/error-responses';
+
 
 export const fetchResponseHandler = response => {
     if(!response.ok){
@@ -19,12 +23,18 @@ export const vkResponseHandler = result => {
     return result.response;
 };
 
-//temporary
-export const MongoResultHandler = (err) => {
-    if(err){
-        return mongoResultError(err);
+export const apiResponseHandler = (response) => {
+    if(response.status === 'error'){
+        switch(response.action){
+            case invalidOrExpiredTokenResponse.action:
+                console.log(invalidOrExpiredTokenResponse.action);
+                break;
+            case loginErrorResponse.action:
+                console.log(loginErrorResponse.action);
+                break;
+        }
+        return null;
     }else{
-        console.log('success');
-        return {success:true};
+        return response;
     }
 };

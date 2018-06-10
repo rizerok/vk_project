@@ -28,6 +28,14 @@ const vkUserSchema = new Schema({
     photo_50: {
         type: String
     }
+},{
+    toObject: {
+        transform(doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+            return ret;
+        }
+    }
 });
 
 export default mongoose.model('VkUser', vkUserSchema);

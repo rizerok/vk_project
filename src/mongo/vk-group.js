@@ -39,6 +39,14 @@ const vkGroupSchema = new Schema({
         type: Number,
         required: true
     }
+},{
+    toObject: {
+        transform(doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+            return ret;
+        }
+    }
 });
 
 export default mongoose.model('VkGroup',vkGroupSchema);
